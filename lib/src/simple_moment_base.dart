@@ -5,10 +5,14 @@ import 'localedata.dart';
 import 'locales/en.dart';
 import 'identifier_position.dart';
 
+import 'package:intl/intl.dart';
+
 class Moment {
   DateTime _date;
   static ILocaleData _globalLocale = new LocaleEn();
   ILocaleData _locale;
+  
+  static int monthPerQuarter = 3;
 
   Moment.now() {
     _date = new DateTime.now();
@@ -16,6 +20,56 @@ class Moment {
 
   Moment.fromDate(DateTime date) {
     _date = date;
+  }
+  
+  String format(String pattern) {
+    return DateFormat(pattern).format(_date);
+  }
+  
+  Moment add(
+      {int years: 0,
+      int quarters: 0,
+      int months: 0,
+      int weeks: 0,
+      int days: 0,
+      int hours: 0,
+      int minutes: 0,
+      int seconds: 0,
+      int milliseconds: 0,
+      int microseconds: 0}) {
+    var dateTime = DateTime(
+        _date.year + years,
+        _date.month + months + quarters * monthPerQuarter,
+        _date.day + days + weeks * DateTime.daysPerWeek,
+        _date.hour + hours,
+        _date.minute + minutes,
+        _date.second + seconds,
+        _date.millisecond + milliseconds,
+        _date.microsecond + microseconds);
+    return Moment.fromDate(dateTime);
+  }
+
+  Moment subtract(
+      {int years: 0,
+      int quarters: 0,
+      int months: 0,
+      int weeks: 0,
+      int days: 0,
+      int hours: 0,
+      int minutes: 0,
+      int seconds: 0,
+      int milliseconds: 0,
+      int microseconds: 0}) {
+    var dateTime = DateTime(
+        _date.year - years,
+        _date.month - months - quarters * monthPerQuarter,
+        _date.day - days - weeks * DateTime.daysPerWeek,
+        _date.hour - hours,
+        _date.minute - minutes,
+        _date.second - seconds,
+        _date.millisecond - milliseconds,
+        _date.microsecond - microseconds);
+    return Moment.fromDate(dateTime);
   }
 
   Moment.fromMillisecondsSinceEpoch(int millisecondsSinceEpoch,
